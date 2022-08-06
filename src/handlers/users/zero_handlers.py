@@ -1,7 +1,6 @@
 import codecs
 import datetime
 import difflib
-import random
 import os
 from keyboards.text.keyboardmenu import menu
 from aiogram.dispatcher.filters import Command, Text
