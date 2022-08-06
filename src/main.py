@@ -1,8 +1,4 @@
-import requests
-import aiogram
-import asyncio
 
-from config import BOT_TOKEN
 
 
 
