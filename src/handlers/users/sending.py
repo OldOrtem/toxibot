@@ -20,7 +20,7 @@ async def send(message: types.Message, state: FSMContext):
     if message.from_user.username not in file.read():
         file.write(f"{message.from_user.username}: {message.from_user.id}\n")
     file.close()
-    
+
     user_id = 0
     date_format = "%H:%M:%S %d.%m.%Y"
     print(f"send_anon {message.from_user.username} ({datetime.datetime.today().strftime(date_format)}): {message.text}")
