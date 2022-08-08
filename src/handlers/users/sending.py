@@ -1,6 +1,6 @@
 
 import datetime
-
+from random import randint
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
@@ -13,40 +13,44 @@ from loader import bot, dp
 from states.send import Send
 
 
-# @dp.message_handler(Command("send_anon"))
-# async def send(message: types.Message, state: FSMContext):
-#     date_format = "%H:%M:%S %d.%m.%Y"
-#     print(f"send_anon {message.from_user.username} ({datetime.datetime.today().strftime(date_format)}): {message.text}")
-#
-#     await message.answer("Со мной значит тебе скучно, нужны какие-то реальные ботинки?\n"
-#                          "Плевать, щас подлючим тебя к какому-нибудь огрызку")
-#
-#     await Send.first()
-#
-#     file = open('handlers/users/users_data/users.txt', 'r')
-#     for string in file:
-#         if username in string:
-#             words = string.split()
-#             user_id = words[1]
-#             break
-#     file.close()
-#
-#     await state.update_data(user_id=user_id)
-#     await message.answer("С ним? бож...")
-#     await message.answer("Ладно...")
-#     await message.answer(
-#         "Вроде всё готово. Я наладил связь, можешь отправлять свои валентинки этому ботинку. Будешь должен.\n"
-#         "Не забудь три правила:\n"
-#         "1.Только текст(пока что что имеем то и юзаем, мб когда-нибудь мои хозяева расширят функционал)\n"
-#         "3.Как захочешь закончить ваш анонимный онанизм напиши /end_chat\n")
-#
-#     # ssss = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Начать диалог", callback_data=f"send:{my_user_id}"), ], ])
-#     keyboard = types.InlineKeyboardMarkup()
-#     keyboard.add(types.InlineKeyboardButton(text="Начать диалог", callback_data=f"sendmess:{my_user_id}"))
-#
-#     await bot.send_message(chat_id=user_id, text="Тебе пишет какой-то анонимус, хочешь ответь ему, хочешь нет, "
-#                                                  "но спамить он может и не прекратит", reply_markup=keyboard)
-#     await Send.next()
+@dp.message_handler(Command("/send_anon"))
+async def send(message: types.Message, state: FSMContext):
+    user_id = 0
+    date_format = "%H:%M:%S %d.%m.%Y"
+    print(f"send_anon {message.from_user.username} ({datetime.datetime.today().strftime(date_format)}): {message.text}")
+    my_user_id = message.from_user.id
+    await message.answer("Щас подлючим тебя к какому-нибудь огрызку")
+    await message.answer("Щас подлючим тебя к какому-нибудь огрызку")
+    file = open('handlers/users/users_data/users.txt', 'r')
+    line_count = sum(1 for line in file)
+    file.seek(0)
+    rand = randint(1, line_count)
+    i = 1
+    for string in file:
+        if i == rand:
+            print(string)
+            words = string.split()
+            user_id = words[1]
+            break
+        i = i + 1
+    file.close()
+
+    await Send.first()
+
+    await state.update_data(user_id=user_id)
+    await message.answer(
+        "Вроде всё готово. Я наладил связь, можешь отправлять свои валентинки этому ботинку. Будешь должен.\n"
+        "Не забудь три правила:\n"
+        "1.Только текст(пока что что имеем то и юзаем, мб когда-нибудь мои хозяева расширят функционал)\n"
+        "3.Как захочешь закончить ваш анонимный онанизм напиши /end_chat\n")
+
+    # ssss = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Начать диалог", callback_data=f"send:{my_user_id}"), ], ])
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.add(types.InlineKeyboardButton(text="Начать диалог", callback_data=f"sendmess:{my_user_id}"))
+
+    await bot.send_message(chat_id=user_id, text="Тебе пишет какой-то анонимус, хочешь ответь ему, хочешь нет, "
+                                                 "но спамить он может и не прекратит", reply_markup=keyboard)
+    await Send.next()
 
 @dp.message_handler(Command("send"))
 async def send(message: types.Message):
