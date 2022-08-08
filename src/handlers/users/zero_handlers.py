@@ -4,7 +4,7 @@ import difflib
 import os
 from keyboards.text.keyboardmenu import menu
 from aiogram.dispatcher.filters import Command, Text
-from loader import bot, dp, text_to_speach
+from loader import bot, dp
 from aiogram.types import Message, ReplyKeyboardRemove
 import config
 
@@ -44,20 +44,20 @@ async def answerForComandHi(message: Message):
     await message.answer("Привет, человече, как тебе удобнее воспринимать мою речь?", reply_markup=menu)
 
 
-@dp.message_handler(Text(equals="Голосом"))
-async def set_voice_speach(message: Message):
-    config.voice_speach = True
-
-    date_format = "%H:%M:%S %d.%m.%Y"
-    print(f"set_voice_speach {message.from_user.username} ({datetime.datetime.today().strftime(date_format)}): {message.text}")
-
-    src = 'handlers/users/voice_messages/' + str(message.chat.id) + str(message.message_id) + '_answer.oga'
-    text_to_speach.save_to_file("Как тебе мой волшебный голос?", src)
-    text_to_speach.runAndWait()
-    voice = open(src, 'rb')
-
-    await bot.send_audio(message.chat.id, voice, reply_markup=ReplyKeyboardRemove())
-    await delete_file(src)
+# @dp.message_handler(Text(equals="Голосом"))
+# async def set_voice_speach(message: Message):
+#     config.voice_speach = True
+#
+#     date_format = "%H:%M:%S %d.%m.%Y"
+#     print(f"set_voice_speach {message.from_user.username} ({datetime.datetime.today().strftime(date_format)}): {message.text}")
+#
+#     # src = 'handlers/users/voice_messages/' + str(message.chat.id) + str(message.message_id) + '_answer.oga'
+#     # text_to_speach.save_to_file("Как тебе мой волшебный голос?", src)
+#     # text_to_speach.runAndWait()
+#     # voice = open(src, 'rb')
+#
+#     await bot.send_audio(message.chat.id, voice, reply_markup=ReplyKeyboardRemove())
+#     await delete_file(src)
 
 
 @dp.message_handler(Text(equals="Текстом"))
@@ -85,12 +85,12 @@ async def default_answer(message: Message):
             tmp = matcher
 
     print("bot: " + text)
-    if config.voice_speach:
-        src = 'handlers/users/voice_messages/' + str(message.chat.id) + str(message.message_id) + '_answer.oga'
-        text_to_speach.save_to_file(text, src)
-        text_to_speach.runAndWait()
-        voice = open(src, 'rb')
-        await bot.send_audio(message.chat.id, voice)
-        await delete_file(src)
-    else:
-        await message.answer(text)
+    # if config.voice_speach:
+    #     src = 'handlers/users/voice_messages/' + str(message.chat.id) + str(message.message_id) + '_answer.oga'
+    #     text_to_speach.save_to_file(text, src)
+    #     text_to_speach.runAndWait()
+    #     voice = open(src, 'rb')
+    #     await bot.send_audio(message.chat.id, voice)
+    #     await delete_file(src)
+    # else:
+    await message.answer(text)
